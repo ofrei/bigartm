@@ -27,7 +27,7 @@ std::shared_ptr<Score> SparsityPhi::CalculateScore(const artm::core::PhiMatrix& 
     topics_to_score_size = config_.topic_name_size();
   }
 
-  ::artm::core::ClassId class_id = ::artm::core::DefaultClass;
+  ::artm::core::ClassId class_id = artm::core::shared_string::DefaultClass();
   if (config_.has_class_id()) {
     class_id = config_.class_id();
   }

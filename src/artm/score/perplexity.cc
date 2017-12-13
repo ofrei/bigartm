@@ -36,10 +36,10 @@ void Perplexity::AppendScore(
   const int topic_size = p_wt.topic_size();
 
   // fields of proto messages for all classes
-  std::unordered_map<::artm::core::ClassId, float> class_weight_map;
-  std::unordered_map<::artm::core::ClassId, double> normalizer_map;
-  std::unordered_map<::artm::core::ClassId, double> raw_map;
-  std::unordered_map<::artm::core::ClassId, ::google::protobuf::int64> zero_words_map;
+  std::unordered_map<::std::string, float> class_weight_map;
+  std::unordered_map<::std::string, double> normalizer_map;
+  std::unordered_map<::std::string, double> raw_map;
+  std::unordered_map<::std::string, ::google::protobuf::int64> zero_words_map;
 
   double normalizer = 0.0;
   double raw = 0.0;

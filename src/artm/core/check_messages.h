@@ -604,7 +604,7 @@ inline void FixMessage(::artm::TopicModel* message) {
   if ((message->class_id_size() == 0) && (token_size > 0)) {
     message->mutable_class_id()->Reserve(token_size);
     for (int i = 0; i < token_size; ++i) {
-      message->add_class_id(::artm::core::DefaultClass);
+      message->add_class_id(::artm::core::shared_string::DefaultClass());
     }
   }
 
@@ -617,7 +617,7 @@ template<>
 inline void FixMessage(::artm::Batch* message) {
   if (message->class_id_size() == 0) {
     for (int i = 0; i < message->token_size(); ++i) {
-      message->add_class_id(DefaultClass);
+      message->add_class_id(artm::core::shared_string::DefaultClass());
     }
   }
 
@@ -670,7 +670,7 @@ template<>
 inline void FixMessage(::artm::DictionaryData* message) {
   if (message->class_id_size() == 0) {
     for (int i = 0; i < message->token_size(); ++i) {
-      message->add_class_id(DefaultClass);
+      message->add_class_id(artm::core::shared_string::DefaultClass());
     }
   }
 }
@@ -698,7 +698,7 @@ inline void FixMessage(::artm::ProcessBatchesArgs* message) {
 template<>
 inline void FixMessage(::artm::TopTokensScoreConfig* message) {
   if (!message->has_class_id() || message->class_id().empty()) {
-    message->set_class_id(DefaultClass);
+    message->set_class_id(artm::core::shared_string::DefaultClass());
   }
 }
 

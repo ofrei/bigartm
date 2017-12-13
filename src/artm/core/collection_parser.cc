@@ -68,8 +68,8 @@ static bool useClassId(const ClassId& class_id, const CollectionParserConfig& co
   if (config.class_id_size() == 0) {
     return true;
   }
-  if (class_id.empty() || class_id == DefaultClass) {
-    return is_member(std::string(), config.class_id()) || is_member(DefaultClass, config.class_id());
+  if (class_id.empty() || class_id == artm::core::shared_string::DefaultClass()) {
+    return is_member(std::string(), config.class_id()) || is_member(artm::core::shared_string::DefaultClass(), config.class_id());
   }
   return is_member(class_id, config.class_id());
 }
@@ -124,7 +124,7 @@ CollectionParserInfo CollectionParser::ParseDocwordBagOfWordsUci(TokenMap* token
     // Autogenerate some tokens
     for (int i = 0; i < num_unique_tokens; ++i) {
       std::string token_keyword = boost::lexical_cast<std::string>(i);
-      token_map->insert(std::make_pair(i, CollectionParserTokenInfo(token_keyword, DefaultClass)));
+      token_map->insert(std::make_pair(i, CollectionParserTokenInfo(token_keyword, artm::core::shared_string::DefaultClass())));
     }
   }
 
@@ -295,7 +295,7 @@ CollectionParser::TokenMap CollectionParser::ParseVocabBagOfWordsUci() {
       BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
     }
 
-    ClassId class_id = (strs.size() == 2) ? strs[1] : DefaultClass;
+    ClassId class_id = (strs.size() == 2) ? strs[1] : artm::core::shared_string::DefaultClass();
     Token token(class_id, strs[0]);
 
     if (token_to_token_id.find(token) != token_to_token_id.end()) {
@@ -326,7 +326,7 @@ CollectionParser::TokenMap CollectionParser::ParseVocabMatrixMarket() {
     float token_weight;
     for (std::string token; vocab >> token_id >> token >> token_weight;) {
       // token_weight is ignored --- it will be re-calculated based on the docword file.
-      token_info.insert(std::make_pair(token_id, CollectionParserTokenInfo(token, DefaultClass)));
+      token_info.insert(std::make_pair(token_id, CollectionParserTokenInfo(token, artm::core::shared_string::DefaultClass())));
     }
   }
 
@@ -484,7 +484,7 @@ CollectionParserInfo CollectionParser::ParseVowpalWabbit() {
 
         std::string item_title = strs[0];
 
-        ClassId class_id = DefaultClass;
+        ClassId class_id = artm::core::shared_string::DefaultClass();
         for (unsigned elem_index = 1; elem_index < strs.size(); ++elem_index) {
           std::string elem = strs[elem_index];
           if (elem.size() == 0) {
@@ -494,7 +494,7 @@ CollectionParserInfo CollectionParser::ParseVowpalWabbit() {
           if (elem[0] == '|') {
             class_id = elem.substr(1);
             if (class_id.empty()) {
-              class_id = DefaultClass;
+              class_id = artm::core::shared_string::DefaultClass();
             }
             continue;
           }

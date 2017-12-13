@@ -102,7 +102,7 @@ std::vector<float> Helpers::GenerateRandomVector(int size, size_t seed) {
 std::vector<float> Helpers::GenerateRandomVector(int size, const Token& token, int seed) {
   size_t h = 1125899906842597L;  // prime
 
-  if (token.class_id != DefaultClass) {
+  if (token.class_id != artm::core::shared_string::DefaultClass()) {
     for (unsigned i = 0; i < token.class_id.size(); i++) {
       h = 31 * h + token.class_id.value()[i];
     }

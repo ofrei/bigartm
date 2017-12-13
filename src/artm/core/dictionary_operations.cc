@@ -30,7 +30,7 @@ std::shared_ptr<Dictionary> DictionaryOperations::Create(const DictionaryData& d
   if (data.cooc_value_size() == 0) {
     dictionary->SetNumItems(data.num_items_in_collection());
     for (int index = 0; index < data.token_size(); ++index) {
-      ClassId class_id = data.class_id_size() ? data.class_id(index) : DefaultClass;
+      ClassId class_id = data.class_id_size() ? data.class_id(index) : artm::core::shared_string::DefaultClass();
       bool has_token_value = data.token_value_size() > 0;
       bool has_token_tf = data.token_tf_size() > 0;
       bool has_token_df = data.token_df_size() > 0;
@@ -254,7 +254,7 @@ std::shared_ptr<Dictionary> DictionaryOperations::Gather(const GatherDictionaryA
   }
 
   int total_items_count = 0;
-  std::unordered_map<ClassId, float> sum_w_tf;
+  std::unordered_map<std::string, float> sum_w_tf;
   for (const std::string& batch_file : batches) {
     std::shared_ptr<Batch> batch_ptr = mem_batches.get(batch_file);
     try {
@@ -348,7 +348,7 @@ std::shared_ptr<Dictionary> DictionaryOperations::Gather(const GatherDictionaryA
           BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
         }
 
-        ClassId class_id = (strs.size() == 2) ? strs[1] : DefaultClass;
+        ClassId class_id = (strs.size() == 2) ? strs[1] : artm::core::shared_string::DefaultClass();
         Token token(class_id, strs[0]);
 
         if (token_to_token_id.find(token) != token_to_token_id.end()) {

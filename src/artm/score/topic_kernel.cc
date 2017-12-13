@@ -34,7 +34,7 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::PhiMatrix& 
     topics_to_score = core::is_member(topic_name, config_.topic_name());
   }
 
-  ::artm::core::ClassId class_id = ::artm::core::DefaultClass;
+  ::artm::core::ClassId class_id = artm::core::shared_string::DefaultClass();
   if (config_.has_class_id()) {
     class_id = config_.class_id();
   }
@@ -77,7 +77,7 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::PhiMatrix& 
   auto norm_iter = normalizers.find(class_id);
   if (norm_iter == normalizers.end()) {
     BOOST_THROW_EXCEPTION(artm::core::InvalidOperation(
-        "TopicKernelScoreConfig.class_id " + class_id + " does not exists in n_wt matrix"));
+        "TopicKernelScoreConfig.class_id " + class_id.value() + " does not exists in n_wt matrix"));
   }
 
   const auto& n_t = norm_iter->second;

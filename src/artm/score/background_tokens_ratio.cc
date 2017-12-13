@@ -27,7 +27,7 @@ std::shared_ptr<Score> BackgroundTokensRatio::CalculateScore(const artm::core::P
   const bool direct_kl = config_.direct_kl();
   const bool save_tokens = config_.save_tokens();
 
-  ::artm::core::ClassId class_id = ::artm::core::DefaultClass;
+  ::artm::core::ClassId class_id = artm::core::shared_string::DefaultClass();
   if (config_.has_class_id()) {
     class_id = config_.class_id();
   }

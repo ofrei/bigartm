@@ -36,7 +36,7 @@ void PhiMatrixOperations::RetrieveExternalTopicModel(const PhiMatrix& phi_matrix
     }
 
     for (int i = 0; i < get_model_args.token_size(); ++i) {
-      Token token(use_default_class ? DefaultClass : get_model_args.class_id(i),
+      Token token(use_default_class ? artm::core::shared_string::DefaultClass() : get_model_args.class_id(i),
                   get_model_args.token(i));
       int token_id = phi_matrix.token_index(token);
       if (token_id != -1) {
@@ -246,7 +246,7 @@ void PhiMatrixOperations::InvokePhiRegularizers(
       // count n and r_i for relative regularization, if necessary
       // prepare next structure with parameters:
       // pair of pairs, first pair --- n and n_t, second one --- r_i and r_it
-      std::unordered_map<core::ClassId, std::pair<std::pair<double, std::vector<float> >,
+      std::unordered_map<std::string, std::pair<std::pair<double, std::vector<float> >,
         std::pair<double, std::vector<float> > > > parameters;
       std::vector<bool> topics_to_regularize;
 
@@ -339,8 +339,8 @@ void PhiMatrixOperations::InvokePhiRegularizers(
   }
 }
 
-static std::map<ClassId, std::vector<float> > FindNormalizersImpl(const PhiMatrix& n_wt, const PhiMatrix* r_wt) {
-  std::map<ClassId, std::vector<float> > retval;
+static std::map<std::string, std::vector<float> > FindNormalizersImpl(const PhiMatrix& n_wt, const PhiMatrix* r_wt) {
+  std::map<std::string, std::vector<float> > retval;
   assert((r_wt == nullptr) || (r_wt->token_size() == n_wt.token_size() && r_wt->topic_size() == n_wt.topic_size()));
 
   for (int token_id = 0; token_id < n_wt.token_size(); ++token_id) {
@@ -375,7 +375,7 @@ static void FindPwtImpl(const PhiMatrix& n_wt, const PhiMatrix* r_wt, PhiMatrix*
   assert((r_wt == nullptr) || (r_wt->token_size() == n_wt.token_size() && r_wt->topic_size() == n_wt.topic_size()));
   assert(p_wt->token_size() == n_wt.token_size() && p_wt->topic_size() == n_wt.topic_size());
 
-  std::map<ClassId, std::vector<float> > n_t = FindNormalizersImpl(n_wt, r_wt);
+  std::map<std::string, std::vector<float> > n_t = FindNormalizersImpl(n_wt, r_wt);
   for (int token_id = 0; token_id < token_size; ++token_id) {
     const Token& token = n_wt.token(token_id);
     assert(r_wt == nullptr || r_wt->token(token_id) == token);
@@ -401,11 +401,11 @@ static void FindPwtImpl(const PhiMatrix& n_wt, const PhiMatrix* r_wt, PhiMatrix*
   }
 }
 
-std::map<ClassId, std::vector<float> > PhiMatrixOperations::FindNormalizers(const PhiMatrix& n_wt) {
+std::map<std::string, std::vector<float> > PhiMatrixOperations::FindNormalizers(const PhiMatrix& n_wt) {
   return FindNormalizersImpl(n_wt, nullptr);
 }
 
-std::map<ClassId, std::vector<float> > PhiMatrixOperations::FindNormalizers(const PhiMatrix& n_wt,
+std::map<std::string, std::vector<float> > PhiMatrixOperations::FindNormalizers(const PhiMatrix& n_wt,
                                                                             const PhiMatrix& r_wt) {
   return FindNormalizersImpl(n_wt, &r_wt);
 }

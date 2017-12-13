@@ -11,54 +11,71 @@
 namespace artm {
 namespace core {
 
-typedef std::string ClassId;
-const std::string DefaultClass = "@default_class";
-const std::string DocumentsClass = "@documents_class";
+  class shared_string : private std::shared_ptr<const std::string> {
+  public:
+    static shared_string& DefaultClass() {
+      static shared_string default_class("@default_class", 0);
+      return default_class;
+    }
 
-class shared_string : private std::shared_ptr<const std::string> {
-public:
-  shared_string(const std::string& rhs)
-    : std::shared_ptr<const std::string>(std::make_shared<std::string>(rhs)) { }
+    static shared_string& DocumentsClass() {
+      static shared_string documents_class("@documents_class", 0);
+      return documents_class;
+    }
 
-  bool operator<(const shared_string& rhs) const {
-    return *(this->get()) < *(rhs.get());
-  }
+    shared_string(const std::string& rhs) {
+      if (rhs == DefaultClass().value()) {
+        (*this) = DefaultClass();
+      } else {
+        this->swap(std::make_shared<const std::string>(rhs));
+      }
+    }
 
-  bool operator<(const std::string& rhs) const {
-    return *(this->get()) < rhs;
-  }
+    bool operator<(const shared_string& rhs) const {
+      return *(this->get()) < *(rhs.get());
+    }
 
-  bool operator==(const shared_string& rhs) const {
-    return *(this->get()) == *(rhs.get());
-  }
+    bool operator<(const std::string& rhs) const {
+      return *(this->get()) < rhs;
+    }
 
-  bool operator==(const std::string& rhs) const {
-    return *(this->get()) == rhs;
-  }
+    bool operator==(const shared_string& rhs) const {
+      return *(this->get()) == *(rhs.get());
+    }
 
-  bool operator!=(const shared_string& rhs) const {
-    return !(*this == rhs);
-  }
+    bool operator==(const std::string& rhs) const {
+      return *(this->get()) == rhs;
+    }
 
-  bool operator!=(const std::string& rhs) const {
-    return !(*this == rhs);
-  }
+    bool operator!=(const shared_string& rhs) const {
+      return !(*this == rhs);
+    }
 
-  size_t size() const {
-    return this->get()->size();
-  }
+    bool operator!=(const std::string& rhs) const {
+      return !(*this == rhs);
+    }
 
-  bool empty() const {
-    return this->get()->empty();
-  }
+    size_t size() const {
+      return this->get()->size();
+    }
 
-  const std::string& value() const {
-    return *this->get();
-  }
+    bool empty() const {
+      return this->get()->empty();
+    }
 
-  // implicit conversion to string operator
-	operator const std::string& () const { return *(this->get()); }
-};
+    const std::string& value() const {
+      return *this->get();
+    }
+
+    // implicit conversion to string operator
+	  operator const std::string& () const { return *(this->get()); }
+
+   private:
+     shared_string(const std::string& rhs, int dummy)
+         : std::shared_ptr<const std::string>(std::make_shared<const std::string>(rhs)) { }
+  };
+
+typedef shared_string ClassId;
 
 std::ostream& operator<<(std::ostream& os, const shared_string& rhs);
 
@@ -67,7 +84,7 @@ std::ostream& operator<<(std::ostream& os, const shared_string& rhs);
 // For historical reasons ClassId goes first, followed by the keyword.
 struct Token {
  public:
-  Token(const ClassId& _class_id, const std::string& _keyword)
+  Token(const std::string& _class_id, const std::string& _keyword)
       : keyword(_keyword), class_id(_class_id)
       , hash_(calcHash(_class_id, _keyword)) { }
 
@@ -106,7 +123,7 @@ struct Token {
   friend struct TokenHasher;
   const size_t hash_;
 
-  static size_t calcHash(const ClassId& class_id, const std::string& keyword) {
+  static size_t calcHash(const std::string& class_id, const std::string& keyword) {
     size_t hash = 0;
     boost::hash_combine<std::string>(hash, keyword);
     boost::hash_combine<std::string>(hash, class_id);

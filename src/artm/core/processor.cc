@@ -327,7 +327,7 @@ InitializeSparseNdw(const Batch& batch, const ProcessBatchesArgs& args) {
   std::vector<int> n_dw_col_ind;
 
   bool use_classes = false;
-  std::map<ClassId, float> class_id_to_weight;
+  std::map<std::string, float> class_id_to_weight;
   if (args.class_id_size() != 0) {
     use_classes = true;
     for (int i = 0; i < args.class_id_size(); ++i) {

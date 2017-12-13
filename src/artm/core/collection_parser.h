@@ -42,7 +42,7 @@ class CollectionParser : boost::noncopyable {
  private:
   struct CollectionParserTokenInfo {
     CollectionParserTokenInfo()
-      : keyword(), class_id(DefaultClass), token_weight(), items_count() { }
+      : keyword(), class_id(artm::core::shared_string::DefaultClass()), token_weight(), items_count() { }
     explicit CollectionParserTokenInfo(std::string keyword_, ClassId class_id_)
       : keyword(keyword_), class_id(class_id_), token_weight(0.0f), items_count(0) { }
     std::string keyword;

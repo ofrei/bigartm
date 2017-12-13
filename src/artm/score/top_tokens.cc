@@ -42,7 +42,7 @@ std::shared_ptr<Score> TopTokens::CalculateScore(const artm::core::PhiMatrix& p_
     }
   }
 
-  ::artm::core::ClassId class_id = ::artm::core::DefaultClass;
+  ::artm::core::ClassId class_id = artm::core::shared_string::DefaultClass();
   if (config_.has_class_id()) {
     class_id = config_.class_id();
   }

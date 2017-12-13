@@ -196,7 +196,7 @@ TEST(CollectionParser, Multiclass) {
   ASSERT_EQ(dictionary_ptr.token(2), "token3");
 
   ASSERT_EQ(dictionary_ptr.class_id(0), "class1");
-  ASSERT_EQ(dictionary_ptr.class_id(1), artm::core::DefaultClass);
+  ASSERT_EQ(dictionary_ptr.class_id(1), artm::core::shared_string::DefaultClass().value());
   ASSERT_EQ(dictionary_ptr.class_id(2), "class1");
 
   ASSERT_APPROX_EQ(dictionary_ptr.token_df(0), 1);
