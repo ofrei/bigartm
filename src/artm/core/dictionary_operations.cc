@@ -182,11 +182,13 @@ std::shared_ptr<Dictionary> DictionaryOperations::Import(const ImportDictionaryA
       BOOST_THROW_EXCEPTION(CorruptedMessageException("Unable to read from " + args.file_name()));
     }
 
-    std::string buffer(length, '\0');
-    fin.read(&buffer[0], length);
     ::artm::DictionaryData dict_data;
-    if (!dict_data.ParseFromArray(buffer.c_str(), length)) {
-      BOOST_THROW_EXCEPTION(CorruptedMessageException("Unable to read from " + args.file_name()));
+    {
+      std::string buffer(length, '\0');
+      fin.read(&buffer[0], length);
+      if (!dict_data.ParseFromArray(buffer.c_str(), length)) {
+        BOOST_THROW_EXCEPTION(CorruptedMessageException("Unable to read from " + args.file_name()));
+      }
     }
 
     // move data from DictionaryData into dictionary

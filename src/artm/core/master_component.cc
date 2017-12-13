@@ -428,12 +428,14 @@ void MasterComponent::ImportModel(const ImportModelArgs& args) {
           "Unable to read from " + args.file_name() + ": message has negative length"));
     }
 
-    std::string buffer(length, '\0');
-    fin.read(&buffer[0], length);
     ::artm::TopicModel topic_model;
-    if (!topic_model.ParseFromArray(buffer.c_str(), length)) {
-      BOOST_THROW_EXCEPTION(CorruptedMessageException(
+    {
+      std::string buffer(length, '\0');
+      fin.read(&buffer[0], length);
+      if (!topic_model.ParseFromArray(buffer.c_str(), length)) {
+        BOOST_THROW_EXCEPTION(CorruptedMessageException(
           "Unable to read from " + args.file_name() + ": message parsing failed"));
+      }
     }
 
     topic_model.set_name(args.model_name());
@@ -511,12 +513,14 @@ void MasterComponent::ImportScoreTracker(const ImportScoreTrackerArgs& args) {
           "Unable to read from " + args.file_name() + ": message has negative length"));
     }
 
-    std::string buffer(length, '\0');
-    fin.read(&buffer[0], length);
     ::artm::ScoreData score_data;
-    if (!score_data.ParseFromArray(buffer.c_str(), length)) {
-      BOOST_THROW_EXCEPTION(CorruptedMessageException(
+    {
+      std::string buffer(length, '\0');
+      fin.read(&buffer[0], length);
+      if (!score_data.ParseFromArray(buffer.c_str(), length)) {
+        BOOST_THROW_EXCEPTION(CorruptedMessageException(
           "Unable to read from " + args.file_name() + ": message parsing failed"));
+      }
     }
 
     auto ptr = instance_->score_tracker()->Add();
