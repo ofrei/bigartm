@@ -2,7 +2,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
+#include <iostream>
 
 #include "boost/functional/hash.hpp"
 
@@ -12,6 +14,53 @@ namespace core {
 typedef std::string ClassId;
 const std::string DefaultClass = "@default_class";
 const std::string DocumentsClass = "@documents_class";
+
+class shared_string : private std::shared_ptr<const std::string> {
+public:
+  shared_string(const std::string& rhs)
+    : std::shared_ptr<const std::string>(std::make_shared<std::string>(rhs)) { }
+
+  bool operator<(const shared_string& rhs) const {
+    return *(this->get()) < *(rhs.get());
+  }
+
+  bool operator<(const std::string& rhs) const {
+    return *(this->get()) < rhs;
+  }
+
+  bool operator==(const shared_string& rhs) const {
+    return *(this->get()) == *(rhs.get());
+  }
+
+  bool operator==(const std::string& rhs) const {
+    return *(this->get()) == rhs;
+  }
+
+  bool operator!=(const shared_string& rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator!=(const std::string& rhs) const {
+    return !(*this == rhs);
+  }
+
+  size_t size() const {
+    return this->get()->size();
+  }
+
+  bool empty() const {
+    return this->get()->empty();
+  }
+
+  const std::string& value() const {
+    return *this->get();
+  }
+
+  // implicit conversion to string operator
+	operator const std::string& () const { return *(this->get()); }
+};
+
+std::ostream& operator<<(std::ostream& os, const shared_string& rhs);
 
 // Token is a pair of keyword and its class_id (also known as tokens' modality).
 // Pay attention to the order of the arguments in the constructor.
@@ -24,8 +73,8 @@ struct Token {
 
   Token& operator=(const Token &rhs) {
     if (this != &rhs) {
-      const_cast<std::string&>(keyword) = rhs.keyword;
-      const_cast<ClassId&>(class_id) = rhs.class_id;
+      keyword = rhs.keyword;
+      class_id = rhs.class_id;
       const_cast<size_t&>(hash_) = rhs.hash_;
     }
 
@@ -50,8 +99,8 @@ struct Token {
     return !(*this == token);
   }
 
-  const std::string keyword;
-  const ClassId class_id;
+  shared_string keyword;
+  shared_string class_id;
 
  private:
   friend struct TokenHasher;

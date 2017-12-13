@@ -104,14 +104,14 @@ std::vector<float> Helpers::GenerateRandomVector(int size, const Token& token, i
 
   if (token.class_id != DefaultClass) {
     for (unsigned i = 0; i < token.class_id.size(); i++) {
-      h = 31 * h + token.class_id[i];
+      h = 31 * h + token.class_id.value()[i];
     }
   }
 
   h = 31 * h + 255;  // separate class_id and token
 
   for (unsigned i = 0; i < token.keyword.size(); i++) {
-    h = 31 * h + token.keyword[i];
+    h = 31 * h + token.keyword.value()[i];
   }
 
   if (seed > 0) {

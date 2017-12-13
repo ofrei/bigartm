@@ -17,7 +17,7 @@ namespace core {
 template<class T, class V>
 bool repeated_field_contains(const T& field, V value) {
   for (int i = 0; i < field.size(); ++i) {
-    if (field.Get(i) == value) {
+    if (value == field.Get(i)) {
       return true;
     }
   }
@@ -64,7 +64,7 @@ std::vector<bool> is_member(const T& elements, const T& set) {
 template<class T, class V>
 bool is_member(const V& value, const T& set) {
   for (int i = 0; i < set.size(); ++i) {
-    if (set.Get(i) == value) {
+    if (value == set.Get(i)) {
       return true;
     }
   }

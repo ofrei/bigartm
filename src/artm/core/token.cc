@@ -5,5 +5,11 @@
 namespace artm {
 namespace core {
 
+std::ostream& operator<<(std::ostream& os, const shared_string& rhs)
+{
+  os << rhs.value();
+  return os;
+}
+
 }  // namespace core
 }  // namespace artm
