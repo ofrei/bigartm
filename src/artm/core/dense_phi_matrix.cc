@@ -58,9 +58,6 @@ int64_t TokenCollection::ByteSize() const {
   int64_t retval = 0;
   retval += artm::utility::getMemoryUsage(token_id_to_token_);
   retval += artm::utility::getMemoryUsage(token_to_token_id_);
-  for (const auto& token : token_id_to_token_) {
-    retval += 2 * (token.keyword.size() + token.class_id.size());
-  }
   return retval;
 }
 
