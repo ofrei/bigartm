@@ -12,6 +12,8 @@
 #include "artm_tests/test_mother.h"
 #include "artm_tests/api.h"
 
+#include <iostream>
+
 // To run this particular test:
 // artm_tests.exe --gtest_filter=MasterModel.Basic
 TEST(MasterModel, Basic) {
@@ -146,6 +148,17 @@ TEST(MasterModel, Basic) {
     ASSERT_EQ(theta.item_weights_size(), nBatches);
     ASSERT_EQ(theta.item_weights(0).value_size(), config.topic_name_size());
   }
+
+  ASSERT_EQ(master_model.info().config().num_processors(), 2);
+  std::cout << "press enter to set num processors to 100...\n"; std::cin.get();
+  config.set_num_processors(100);
+  master_model.Reconfigure(config);
+  ASSERT_EQ(master_model.info().config().num_processors(), 100);
+  std::cout << "press enter to set num processors to 1...\n"; std::cin.get();
+  config.set_num_processors(1);
+  master_model.Reconfigure(config);
+  ASSERT_EQ(master_model.info().config().num_processors(), 1);
+  std::cout << "press enter to finish...\n"; std::cin.get();
 }
 
 // To run this particular test:
